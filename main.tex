@@ -1,0 +1,277 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{setspace}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{subcaption}
+\usepackage[a4paper]{geometry}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\usepackage[
+backend=bibtex,
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+
+\addbibresource{bibliography.bib}
+
+
+
+\usepackage{ifthen}
+\usepackage{float}
+\usepackage{verbatim}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+
+\captionsetup[figure]{
+  name = Fig.,
+  labelfont = bf
+}
+
+\captionsetup[table]{
+  name = Tab.,
+  labelfont = bf
+}
+
+
+\title{Gravitational waves\\\linespread{1.5}
+\small Master in Theoretical Physics\\
+General Relativity 1\\
+Alma Mater Studiorum - Bologna University}
+\author{Damiano Scevola}
+\date{07/02/2024}
+
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+Gravitational radiation was theorized by Einstein himself in 1916 as a consequence of his General theory of Relativity. In his paper ``Approximative Integration of the Field Equations of Gravitation'', he derived the linearized equations for gravitational waves in a weak-field approximation, demonstrating that disturbances in the gravitational field propagate through spacetime in the form of waves, similar to how electromagnetic waves propagate through the electromagnetic field. It took several decades for experimental evidence of gravitational waves to be obtained. The first indirect evidence came in the 1970s through the measurement of the energy lost by a binary pulsar system, PSR B1913+16, due to emission of gravitational radiation, consistently with the predictions of General Relativity. Direct detection of gravitational waves was finally achieved in 2015 by the Laser Interferometer Gravitational-Wave Observatory (LIGO) collaboration. This phenomenon could turn out to be crucial for understanding the early universe, providing information that the current freely propagating photons do not convey due to their strong coupling with matter in the hot phase of the universe.
+
+In this dissertation, we are going to retrace the steps that make the gravitational radiation emerge from General Relativity, and gain some physical insight of how objects behave when a gravitational wave passes through them.
+
+Gravitational waves are defined in the weak-field regime, where the metric tensor can be written as
+
+\begin{equation}
+  g_{\mu\nu} = \eta_{\mu\nu} + \varepsilon h_{\mu\nu},
+  \label{eq:metric-weak}
+\end{equation}
+where $\eta_{\mu\nu}$ is the flat Minkowski metric $diag(-1,+1,+1,+1)$, $h_{\mu\nu}$ is a symmetric perturbation tensor, which is small with respect to $\eta_{\mu\nu}$, and $\varepsilon$ is just a parameter that will help us to keep track of the order of magnitude of terms in the expressions we are going to be writing, and will eventually be set equal to $1$.
+
+Our goal is to derive the equations of motion obeyed by the perturbation $h_{\mu\nu}$, which propagates on a flat background spacetime, from Einstein's field equations. However, the form of the tensor $h_{\mu\nu}$ that describes a physical spacetime is not unique, since we can always perform a slight coordinate change and end up with another perturbation tensor $h'_{\mu\nu}$ which still obeyes the equations of motion in the new coordinate system. This non-uniqueness is known as \textit{gauge invariance}, and it is analogous to the one we know in electromagnetism.
+In order to address this issue, we need to delve into the theory of maps between manifolds, that gives us the tools to relate all perturbation tensors that are related by a change of coordinates.
+
+\section{Pullback, pushforward and diffeomorphisms}
+Suppose we have two differentiable manifolds $\mathcal{M}$ and $\mathcal{N}$, two charts $x^{\mu}: \mathcal{M} \rightarrow \mathbb{R}^m$ and $y^{\alpha}: \mathcal{N} \rightarrow \mathbb{R}^n$ and a map $\phi: \mathcal{M} \rightarrow \mathcal{N}$.
+\begin{definition}[Pullback of a scalar function]
+    Let $f: \mathcal{N} \rightarrow I \subseteq \mathbb{R}$ be a scalar function on $\mathbb{N}$. Then we define the pullback $\phi^*f: \mathcal{M} \rightarrow I$ as
+    $$(\phi^*f)(P) = f(\phi(P))$$
+    for all $P \in \mathcal{M}$.
+\end{definition}
+Since the map $\phi$ goes from $\mathcal{M}$ to $\mathcal{N}$, there is no way to push some function defined on $\mathcal{M}$ onto $\mathcal{N}$. However, since we know that vectors in differential geometry are defined as functionals that act on functions to give a number, we can exploit the previous definition to define the pushforward of a vector.
+\begin{definition}[Pushforward of a vector]
+    Let $\bar{V}$ be a vector defined at a point $P \in \mathbb{M}$. Therefore $\bar{V}$ acts on functions defined at least in a neighbourhood of $P \in \mathbb{M}$ to give a scalar. We define the pushforward $\phi_*\bar{V}$ as a vector at $\phi(P)\in \mathcal{N}$ such that
+    $$(\phi_*\bar{V})(f) = \bar{V}(\phi^*f)$$
+    for all functions $f$ defined at least in a neighbourhood of $\phi(P) \in \mathcal{N}$.
+\end{definition}
+Using a similar trick, we can define the pullback of 1-forms.
+\begin{definition}[Pullback of a 1-form]
+    Let $\tilde{\omega}$ be a 1-form defined at a point $Q = \phi(P) \in \mathcal{N}$, with $P \in \mathcal{M}$. Therefore $\tilde{\omega}$ acts on vectors defined at $Q$ to give a scalar. We define the pullback $\phi^*\tilde{\omega}$ as a 1-form at $P \in \mathcal{M}$ such that
+    $$(\phi^*\tilde{\omega})(\bar{V}) = \tilde{\omega}(\phi_*\bar{V})$$
+    for all vectors $\bar{V}$ defined at $P$.
+\end{definition}
+Notice that as functions can be pulled back but not pushed forward, so do 1-forms, while vectors can be pushed forward but not pulled back.
+
+Let us take a look at how the components of a vector relate to its pushed-forward counterpart. If we have a vector $\bar{V} \in T_P\mathcal{M}$, we can write
+$$\bar{V} = V^{\mu}\frac{\partial}{\partial x^{\mu}},$$
+so that, applying the vector to an arbitrary function and using the chain rule,
+$$(\phi_*\bar{V})^{\alpha}\frac{\partial}{\partial y^\alpha}(f) = (\phi_*\bar{V})(f) = \bar{V}(\phi^*f) = V^{\mu}\frac{\partial}{\partial x^{\mu}}(\phi^* f) = V^{\mu}\frac{\partial}{\partial x^{\mu}}(f \circ \phi) = V^{\mu}\frac{\partial y^{\alpha}}{\partial x^{\mu}}\frac{\partial}{\partial y^{\alpha}}(f)$$
+which shows, by looking at the ends of the chain of equalities, that the components of the pushed-forward vector are given by the transformation of the original vector through the matrix elements $\partial x^{\mu}/\partial y^{\alpha}$, which resembles the standard vector transformation law under the change of coordinates $x^{\mu} \rightarrow y^{\alpha}$ when the two manifolds $\mathcal{M}$ and $\mathcal{N}$ coincide.
+
+Similarly, we can show the form of the transformation of the components of 1-forms under pullback. In fact, if we have a 1-form $\tilde{\omega} \in T^*_P\mathcal{N}$, we can write (applying it to an arbitrary vector)
+$$(\phi^*\tilde{\omega})_{\mu} V^{\mu} = (\phi^*\tilde{\omega})_{\mu}\tilde{dx}^{\mu}(\bar{V}) = \tilde{\omega}(\phi_*\bar{V}) = \omega_{\alpha}(\phi_*\bar{V})^{\alpha} = \omega_{\alpha} \frac{\partial x^{\alpha}}{\partial y^{\mu}} V^{\mu}$$
+which resembles the standard transformation law of 1-forms when $\mathcal{M}$ and $\mathcal{N}$ are the same manifold.
+
+At this point, it is easy to generalize the pullback operation on $(0,l)$ tensors ($T$) and the pushforward on $(k,0)$ tensors ($S$):
+\begin{align*}
+  (\phi^*T)(\bar{V}^{(1)}, \bar{V}^{(2)}, \ldots, \bar{V}^{(l)}) &= T(\phi_*\bar{V}^{(1)},\phi_*\bar{V}^{(2)},\ldots,\phi_*\bar{V}^{(l)})\\
+  (\phi_*S)(\tilde{\omega}_{(1)}, \tilde{\omega}_{(2)}, \ldots, \tilde{\omega}_{(k)}) &= S(\phi^*\tilde{\omega}_{(1)},\phi^*\tilde{\omega}_{(2)},\ldots,\phi^*\tilde{\omega}_{(k)})
+\end{align*}
+In components, we get the following transformation laws, which resemble the standard tensor transformation laws when $\mathcal{M}$ and $\mathcal{N}$ are the same manifold:
+\begin{align*}
+    (\phi^* T)_{\alpha_1 \alpha_2 \ldots \alpha_l} &= \frac{\partial x^{\mu_1}}{\partial y^{\alpha_1}}\frac{\partial x^{\mu_2}}{\partial y^{\alpha_2}}\cdots \frac{\partial x^{\mu_l}}{\partial y^{\alpha_l}}T_{\mu_1 \mu_2 \ldots \mu_l}\\
+    (\phi_* S)^{\mu_1 \mu_2 \ldots \mu_k} &= \frac{\partial x^{\mu_1}}{\partial y^{\alpha_1}}\frac{\partial x^{\mu_2}}{\partial y^{\alpha_2}}\cdots \frac{\partial x^{\mu_k}}{\partial y^{\alpha_k}} T^{\alpha_1 \alpha_2\ldots \alpha_k}
+\end{align*}
+
+Let us consider the map $\phi: \mathcal{M} \rightarrow \mathcal{N}$ to be invertible so that it induces a map $\phi^{-1}: \mathcal{N} \rightarrow \mathcal{M}$. Now that we have the inverse map, we can push functions and 1-forms forward using the pullback definition with $(\phi^{-1})$, and we can pull vectors back using the pushforward definition with $(\phi^{-1})$. In this case, $\phi$ is called \textit{diffeomorphism} and it establishes an equality relation between $\mathcal{M}$ and $\mathcal{N}$: they are the same differentiable manifold. In addition, we now have a way to push and pull tensors of any type $(k,l)$ back and forth using $\phi$ and $\phi^{-1}$:
+$$(\phi_* T)(\tilde{\omega}_{(1)}, \ldots, \tilde{\omega}_{(k)}, \bar{V}^{(1)},\ldots, \bar{V}^{(l)}) = T(\phi^*\tilde{\omega}_{(1)}, \ldots, \phi^*\tilde{\omega}_{(k)}, [\phi^{-1}]_* \bar{V}^{(1)},\ldots,[\phi^{-1}]_* \bar{V}^{(l)}),$$
+in components:
+$$(\phi_* T)^{\alpha_1 \ldots \alpha_k}_{\beta_1 \ldots \beta_l} = \frac{\partial y^{\alpha_1}}{\partial x^{\mu_1}}\cdots\frac{\partial y^{\alpha_k}}{\partial x^{\mu_k}}\frac{\partial x^{\nu_1}}{\partial x^{\beta_1}}\cdots\frac{\partial x^{\nu_l}}{\partial x^{\beta_l}}$$
+
+In this language, diffeomorphisms are the same thing as coordinate transformations, since tensorial quantities obey the same transformation laws. However, diffeomorphisms should be thought as ``active'', since the map $\phi$ ``actively moves'' the points on the manifold, while changes of coordinates should be thought as ``passive'', since we are just changing the reference points and curves that we are using to uniquely identify points on our manifold.
+
+\section{Lie derivatives}
+In order to define a derivative for tensorial quantities, we need to compare tensors that are defined in different spaces. With the machinery that we have just built, this is an easy task, since we can push tensors from one tangent space to the other. However, a single diffeomorphism is not enough, since the definition of derivative contains a limit, so we need a smooth 1-parameter family of diffeomorphisms $\phi_{t}$, in the sense that for each value of $t$ we have a diffeomorphism and the group axioms are satisfied:
+\begin{itemize}
+  \item composition law: $\phi_s \circ \phi_t = \circ_{s+t}$;
+  \item associativity: $\phi_s \circ (\phi_r \circ \phi_t) = (\phi_s \circ \phi_r) \circ_{\phi_t}$;
+  \item neutral element: $\phi_0$
+  \item inverse element: $\phi_t^{-1} = \phi_{-t}$.
+\end{itemize}
+One-parameter families of diffeomorphisms are in one to one correspondence with vector fields on the manifolds, in fact, from a one-parameter family $\phi_t$ we can choose a hypersurface of initial points, each one of which evolves as a curve through $\phi_t$ as t increases. These curves fill the entire manifold provided the diffeomorphism family is regular enough, and the curves define a vector at each point, therefore we have a vector field. Conversely, if we are given a vector field, we can always find the integral curves, and after choosing an hypersurface that intersects all integral curves and is tangent to none, we can define a one-parameter family of diffeomorphisms just by following the curves and using their parameter as the parameter for the family.
+
+We can now proceed to define the Lie derivative.
+\begin{definition}[Lie derivative]\label{def:lie-derivative}
+  Given a tensor field $T(x^{\alpha})$ and a vector field $\bar{\xi}$ defined on a differentiable manifold $\mathcal{M}$, the Lie derivative of $T$ along $\bar{\xi}$ evaulated at a point $P = \phi_0(P)$ is defined as
+  $$\pounds_{\bar{\xi}}T|_P = \lim_{\varepsilon \rightarrow 0} \frac{(\phi^*_{-\varepsilon} T)(P) - T(P)}{\varepsilon}$$
+\end{definition}
+This definition is manifestly independent on the choice of the coordinates.
+The Lie derivative enjoys the following properties:
+\begin{itemize}
+  \item it is linear in the argument: $\pounds_{\bar{\xi}}(aT+bS) = a \pounds_{\bar{\xi}}T + b \pounds_{\bar{\xi}} S$;
+  \item it obeys Leibniz rule: $\pounds_{\bar{\xi}} (A \otimes B) = (\pounds_{\bar{\xi}}A) \otimes B + A \otimes (\pounds_{\bar{\xi}} B)$;
+  \item it reduces to the directional derivative on functions: $\pounds_{\bar{\xi}}f = \xi^{\mu}\partial_{\mu}f$
+\end{itemize}
+
+To check the action of the Lie derivative on tensor components, it is convenient to choose coordinates adapted to the vector field $\bar{\xi}$, where $x^1$ is the parameter along the integral curves. In this situation, the Lie derivative of the tensor components simply becomes:
+$$\pounds_{\bar{\xi}}T^{\alpha_1\ldots \alpha_k}_{\beta_1\ldots\beta_l} = \partial_1 T^{\alpha_1\ldots \alpha_k}_{\beta_1\ldots\beta_l}.$$
+In particular, for a vector field $\bar{U}$, we have $\pounds_{\bar{\xi}}U^{\mu} = \partial_1 U^{\mu}$.
+However, it is also true that
+$$[\bar{\xi},\bar{U}]^{\mu} = \xi^{\nu}\partial_{\nu}U^{\mu} - U^{\nu}\partial_{\nu}\xi^{\mu} = \partial_1 U^{\mu}$$
+since in this coordinate system $\xi^{\mu} = (1,0,\ldots,0)$, so its partial derivatives vanish and the only term that survives is the one in the result. Since the commutator is coordinate independent, we have just shown that the Lie derivative of a vector field along $\bar{\xi}$ is equal to the commutator between the latter and the former.
+
+By using the Leibniz rule and the properties listed so far (in addition to the consideration that the Lie derivative of a scalar equals its covariant derivative, and that the covariant derivative of the metric vanishes for the Levi-Civita connection), one can show that the Lie derivative of the metric tensor can be expressed in terms of covariant derivatives as follows:
+\begin{equation}
+  \pounds_{\bar{\xi}}g_{\mu\nu} = \nabla_{\mu}\xi_{\nu} + \nabla_{\nu}\xi_{\mu}
+  \label{eq:lie-metric}
+\end{equation}
+
+\section{Linearized gravity}
+The regime of linearized gravity is, as previously stated, the weak-field approximation regime, where the metric is of the form \eqref{eq:metric-weak}. The inverse metric is therefore $g^{\mu\nu} = \eta^{\mu\nu}-\varepsilon h^{\mu\nu}$.
+Since the derivative of $\eta_{\mu\nu}$ vanishes, we can compute the Christoffel symbols in the Levi-Civita connection at first order in $\varepsilon$ (and set $\varepsilon=1$ after that):
+\begin{equation}
+  \Gamma_{\mu\nu}^{\rho} = \frac{1}{2}\eta^{\rho\alpha}(\partial_{\mu}h_{\nu\alpha} + \partial_{\nu}h_{\mu\alpha} - \partial_{\alpha}h_{\mu\nu})
+  \label{eq:christoffel-symbols}
+\end{equation}
+The Riemann tensor at first order can be written by neglecting the $\Gamma\Gamma$ terms:
+\begin{equation}
+  R_{\mu\nu\rho\sigma} = \eta_{\mu\lambda}\partial_{\rho}\Gamma_{\nu\sigma}^{\lambda} - \eta_{\mu\lambda}\partial_{\sigma}\Gamma^{\lambda}_{\nu\rho} = \frac{1}{2}(\partial_{\rho}\partial_{\nu}h_{\mu\sigma} + \partial_{\sigma}\partial_{\mu}h_{\nu\rho} - \partial_{\sigma}\partial_{\nu}h_{\mu\rho} - \partial_{\rho}\partial_{\mu}h_{\nu\sigma}).
+  \label{eq:riemann-tensor}
+\end{equation}
+By contracting the first index with the third, we get the Ricci tensor:
+\begin{equation}
+  R_{\mu\nu} = \frac{1}{2}(\partial_{\sigma}\partial_{\nu}h^{\sigma}_{\mu} + \partial_{\sigma}\partial_{\mu}h^{\sigma}_{\nu}-\partial_{\mu}\partial_{\nu}h-\square h_{\mu\nu}),
+  \label{eq:ricci-tensor}
+\end{equation}
+which yields the Ricci scalar after contraction:
+\begin{equation}
+  R = \partial_{\mu}\partial_{\nu}h^{\mu\nu} - \square h.
+  \label{eq:ricci-scalar}
+\end{equation}
+The Einstein tensor at first order is therefore:
+\begin{equation}
+  G_{\mu\nu} = R_{\mu\nu} - \frac{1}{2}\eta_{\mu\nu}R
+  = \frac{1}{2}(\partial_{\sigma}\partial_{\nu}h^{\sigma}_{\mu} + \partial_{\sigma}\partial_{\mu}h^{\sigma}_{\nu} - \partial_{\mu}\partial_{\nu}h - \square h_{\mu\nu} - \eta_{\mu\nu} \partial_{\rho}\partial_{\lambda}h^{\rho\lambda} + \eta_{\mu\nu}\square h)
+  \label{eq:einstein-tensor}
+\end{equation}
+
+Since the zero-th order for the energy-momentum tensor is vanishing (since it solves Einstein's equation with flat metric), then it is already at first order in $\varepsilon$ and it can be written as $\varepsilon T_{\mu\nu}$, so we can write the Einstein's equation at first order as $G_{\mu\nu} = 8\pi G_N T_{\mu\nu}$.
+
+\section{Gauge invariance}
+As we anticipated earlier, since there are multiple coordinate systems related by each other by small coordinate transformations in which the perturbation tensor $h_{\mu\nu}$ is small with respect to the flat metric, then we need to identify the relationship between the perturbation tensors in such distinct coordinate systems, in order to gauge away redundant mathematics and focus on the physical significance of that tensor.
+To do that, le us consider two diffeomorphic differentiable manifolds:
+\begin{itemize}
+  \item a background spacetime $\mathcal{M}_b$, equipped with the flat metric $\eta_{\mu\nu}$
+  \item a physical spacetime $\mathcal{M}_p$, equipped with a metric $g_{\mu\nu}$
+\end{itemize}
+and let us denote the diffeomorphism as $\phi: \mathcal{M}_b \rightarrow \mathcal{M}_p$.
+
+What we want to do is to construct our linearized theory in the background spacetime, that is describe the propagation of a perturbation tensor on a flat background.
+This is achievable by performing the pullback $(\phi*g)_{\mu\nu}$ of the physical metric tensor that lives in $\mathcal{M}_p$ onto the background spacetime $\mathcal{M}_b$. Once this crucial step is done, we can define the perturbation tensor on the background spacetime as the difference between the pulled back metric and the flat metric:
+\begin{equation}
+  h_{\mu\nu} = (\phi^*g)_{\mu\nu}-\eta_{\mu\nu}
+  \label{eq:perturbation-background}
+\end{equation}
+
+Notice that, since the diffeomorphism is arbitrary, there is no reason why we should expect $h_{\mu\nu}$ to always be small, however, if the gravitational fields on $\mathcal{M}_p$ are weak, then for some diffeomorphisms we have $|h_{\mu\nu}| \ll 1$. If we stick to this case, we can also say that, if $g_{\mu\nu}$ obeys Einstein's equations on the physical spacetime, then $h_{\mu\nu}$ obeys the linearized equation $G_{\mu\nu} = 8\pi G T_{\mu\nu}$ with $G_{\mu\nu}$ given by \eqref{eq:einstein-tensor}, since we can pull back both $G_{\mu\nu}$ and $T_{\mu\nu}$ onto the background spacetime.
+In this terms, the issue of gauge invariance simply corresponds to the fact that there are multiple distinct diffeomorphisms between $\mathcal{M}_b$ and $\mathcal{M}_p$ that leave the perturbation \eqref{eq:perturbation-background} small.
+
+In order to find a relation between all possible perturbations, let us consider a one-parameter family of diffeomorphisms $\psi_{\epsilon}$ generated by a vector field $\bar{\xi}$ on the background spacetime $\mathcal{M}_b$. If $\epsilon$ is sufficiently small and we have a diffeomorphism $\phi: \mathcal{M}_b \rightarrow \mathcal{M}_p$ that leaves the perturbation \eqref{eq:perturbation-background} small, then also the perturbation pulled back through $(\phi \circ \psi_{\epsilon})$ will still be small, although will be different from the other one. Since $\epsilon$ is a continuous parameter, we can define a family of perturbations, and by doing the calculations we get:
+\begin{align}
+  h_{\mu\nu}^{(\epsilon)} &= [(\phi \circ \psi_{\epsilon})^*g]_{\mu\nu} - \eta_{\mu\nu} = [\psi_{\epsilon}^*(\phi^*g)]_{\mu\nu} - \eta_{\mu\nu} = \psi_{\epsilon}^*(h+\eta)_{\mu\nu} - \eta_{\mu\nu}\nonumber \\
+  &= \psi_{\epsilon}^*(h_{\mu\nu}) + \psi_{\epsilon}^*(\eta_{\mu\nu}) - \eta_{\mu\nu} = \psi_{\epsilon}^*(h_{\mu\nu}) + \epsilon \left(\frac{\psi^*_{\epsilon}(\eta_{\mu\nu})-\eta_{\mu\nu}}{\epsilon} \right) \nonumber \\
+  &= h_{\mu\nu} + \epsilon \pounds_{\bar{\xi}}\eta_{\mu\nu} = h_{\mu\nu} + \epsilon(\nabla_{\mu}\xi_{\nu} + \nabla_{\nu}\xi_{\mu}),
+\end{align}
+where we used the fact that the pullback under composition of diffeomorphism is equal to the composition of the pullbacks in reversed order, the linearity of pullback, the definition \ref{def:lie-derivative} of Lie derivative and the expression for the Lie derivative of the metric \eqref{eq:lie-metric}. Since the metric in the background spacetime is flat, covariant derivatives become partial derivatives and we can write the expression of the family of perturbations that are related with each other through a diffeomorphism generated by an arbitrary vector field $\bar{\xi}$:
+\begin{equation}
+  h_{\mu\nu}^{(\epsilon)} = h_{\mu\nu} + \epsilon (\partial_{\mu} \xi_{\nu} + \partial_{\nu} \xi_{\nu}).
+  \label{eq:gauge-metric}
+\end{equation}
+If we then have a perturbation $h_{\mu\nu}$, we can perform the above gauge transformation \eqref{eq:gauge-metric}, and end up with a different form of the metric perturbation that describes the same physical situation, since the transformation is equivalent to a change of coordinates (encoded by the diffeomorphism $\psi_{\epsilon}$), and 
+one can indeed verify that the Riemann curvature tensor \eqref{eq:riemann-tensor} (which describes the physical curvature) is left invariant by the gauge transformation \eqref{eq:gauge-metric}. This is analogous to the gauge transformation $A'^{\mu} = A^{\mu} + \partial^{\mu}\Lambda$ in electromagnetism that leaves the field strength tensor $F_{\mu\nu} = \partial_{\mu}A_{\nu} - \partial_{\nu}A_{\mu}$ invariant (and also the lagrangian, thus the physics).
+
+
+\section{Decomposition of the perturbation}
+Before proceeding to perform a gauge fixing choice and solve the linearized Einstein's equations, let us perform a decomposition of the perturbation tensor $h_{\mu\nu}$ that will be useful in describing gravitational radiation.
+Let us fix an inertial coordinate system in the Minkowski background spacetime, and consider the transformation properties of $h_{\mu\nu}$ under spatial rotations. The $h_{00}$ component is not affected by rotations, therefore it is a scalar, while the $h_{0i}$ components form a three-vector (as well as $h_{i0}$ since $h_{\mu\nu}$ is symmetric), and $h_{ij}$ is a 3 by 3 symmetric tensor, which can be further decomposed in a trace part and a traceless part. We can thus write:
+\begin{subequations}\label{eq:h-decomposition}
+  \begin{align}
+    h_{00} &= -2 \Phi \label{eq:h00-scalar}\\
+    h_{0i} &= w_i \label{eq:h0i-vector}\\
+    h_{ij} &= 2s_{ij} - 2 \Psi \delta_{ij}, \label{eq:hij-tensor}
+  \end{align}
+\end{subequations}
+where $\Psi$ is related to the trace of $h_{ij}$ and $s_{ij}$ is a traceless symmetric tensor, called \textit{strain}:
+\begin{align}
+  \Psi &= -\frac{1}{6}\delta^{ij}h_{ij} \label{eq:psi}\\
+  s_{ij} &= \frac{1}{2}\left(h_{ij} - \frac{1}{3}\delta^{kl}h_{kl}\delta_{ij}\right)
+\end{align}
+
+We can now proceed to derive the form of Einstein's equations in these new variables $\Phi, w^i, \Psi, s_{ij}$ by inserting \eqref{eq:h-decomposition} into the expression for the Riemann tensor \eqref{eq:riemann-tensor} (and leaving the spacial part $h_{ij}$ not decomposed for convenience):
+\begin{subequations}
+  \begin{align}
+    R_{0j0l} &= \partial_j\partial_l\Phi + \frac{1}{2}(\partial_0\partial_j w_l + \partial_0\partial_l w_j) - \frac{1}{2}\partial_0 \partial_0 h_{jl}\\
+    R_{0jkl} &= \frac{1}{2}\left(\partial_j\partial_k w_l - \partial_j\partial_l w_k - \partial_0 \partial_k h_{lj} + \partial_0 \partial_l h_{kj}\right)\\
+    R_{ijkl} &= \frac{1}{2}\left(\partial_j \partial_k h_{li} - \partial_j \partial_l h_{ki} -\partial_i \partial_k h_{lj} + \partial_i \partial_l h_{kj}\right),
+  \end{align}
+\end{subequations}
+where the other components are related to the above by the symmetries of the Riemann tensor (antisymmetry between first two indices and between the last two indices and symmetry between block exchange of first two indices with the last two). By contracting the first and third indices and decomposing $h_{ij}$ using $\Psi$ and $s_{ij}$, we can compute the components of the Ricci tensor:
+\begin{subequations}
+\begin{align}
+R_{00} &= \nabla^2\Phi + \partial_0\partial_k x^k + 3\partial_0\partial_0\Psi\\
+R_{0j} &= -\frac{1}{2}\nabla^2 w_j + \frac{1}{2} \partial_j \partial_k w^k + 2\partial_0\partial_j \Psi + \partial_0\partial_k s_j^k\\
+R_{ij} &= -\partial_i\partial_j(\Phi - \Psi) - \partial_0 \partial_{(i}w_{j)} + \square\Psi\delta_{ij} - \square s_{ij} + 2\partial_k\partial_{(i}s_{j)}^k,
+\end{align}
+\end{subequations}
+where the parentheses over indices stand for symmetrization i.e. $A_{(ij)} = \frac{1}{2}(A_{ij} + A_{ji})$.
+Finally, we can compute the Einstein tensor:
+\begin{subequations}
+  \begin{align}
+    G_{00} &= 2\nabla^2 \Psi + \partial_k \partial_l s^{kl}\\
+    G_{0j} &= -\frac{1}{2}\nabla^2 w_j + \frac{1}{2}\partial_j\partial_k w^k + 2\partial_0\partial_j \Psi + \partial_0 \partial_k s_j^k\\
+    G_{ij} &= (\delta_{ij}\partial^2 - \partial_i\partial_j)(\Phi - \Psi) + \delta_{ij}\partial_0 \partial_k w^k - \partial_0 \partial_{(i}w_{j)} +\nonumber\\
+    &\ \ \ \ + 2\delta_{ij}\partial_0\partial_0\Psi - \square s_{ij} + 2\partial_k \partial_{(i}s_{j)}^k - \delta_{ij} \partial_{k}\partial_l s^{kl}
+  \end{align}
+\end{subequations}
+
+\section{Gauge fixing choices}
+
+
+
+\section{Gravitational waves}
+
+
+
+\section{Detection with interferometers}
+
+
+\nocite{carrol, wik, cas}
+\printbibliography
+
+\end{document}
