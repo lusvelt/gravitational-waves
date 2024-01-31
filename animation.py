@@ -6,8 +6,7 @@ radius = 2
 amplitude = 0.25  # Amplitude of sinusoidal motion
 frequency = 4  # Frequency of sinusoidal motion
 duration = 4*np.pi
-
-config.background_color = "#000000"
+dot_color=WHITE
 
 # Calculate initial positions of dots
 initial_positions = [
@@ -22,9 +21,9 @@ initial_positions = [
 alpha = ValueTracker()
 
 
+
 class PlusPolarization(Scene):
     def construct(self):
-        self.camera.background_color = WHITE
         dots = always_redraw(
             lambda: VGroup(
                 *[
@@ -33,19 +32,18 @@ class PlusPolarization(Scene):
                             initial_positions[i][1] - amplitude * np.sin(frequency * alpha.get_value()) * initial_positions[i][1],
                             0
                         ],
-                        color=BLACK
+                        color=dot_color
                     )
                     for i in range(num_dots)
                 ])
         )
-        self.add(dots, Dot(ORIGIN, color=BLACK))
+        self.add(dots, Dot(ORIGIN, color=dot_color))
         self.play(alpha.animate.set_value(duration), rate_func=linear, run_time=duration)
         
 
 
 class CrossPolarization(Scene):
     def construct(self):
-        self.camera.background_color = WHITE
         dots = always_redraw(
             lambda: VGroup(
                 *[
@@ -54,19 +52,18 @@ class CrossPolarization(Scene):
                             initial_positions[i][1] + amplitude * np.sin(frequency * alpha.get_value()) * initial_positions[i][0],
                             0
                         ],
-                        color=BLACK
+                        color=dot_color
                     )
                     for i in range(num_dots)
                 ])
         )
-        self.add(dots, Dot(ORIGIN, color=BLACK))
+        self.add(dots, Dot(ORIGIN, color=dot_color))
         self.play(alpha.animate.set_value(duration), rate_func=linear, run_time=duration)
 
 
 
-class CircularRightPolarization(Scene):
+class CircularLeftPolarization(Scene):
         def construct(self):
-            self.camera.background_color = WHITE
             dots = always_redraw(
                 lambda: VGroup(
                     *[
@@ -75,19 +72,18 @@ class CircularRightPolarization(Scene):
                                 initial_positions[i][1] + amplitude / np.sqrt(2) * (-np.sin(frequency * alpha.get_value()) * initial_positions[i][1] + np.sin(frequency * alpha.get_value() + np.pi/2) * initial_positions[i][0]),
                                 0
                             ],
-                            color=BLACK
+                            color=dot_color
                         )
                         for i in range(num_dots)
                     ])
             )
-            self.add(dots, Dot(ORIGIN, color=BLACK))
+            self.add(dots, Dot(ORIGIN, color=dot_color))
             self.play(alpha.animate.set_value(duration), rate_func=linear, run_time=duration)
 
 
 
-class CircularLeftPolarization(Scene):
+class CircularRightPolarization(Scene):
     def construct(self):
-        self.camera.background_color = WHITE
         dots = always_redraw(
             lambda: VGroup(
                 *[
@@ -96,10 +92,10 @@ class CircularLeftPolarization(Scene):
                                 initial_positions[i][1] + amplitude / np.sqrt(2) * (-np.sin(frequency * alpha.get_value()) * initial_positions[i][1] - np.sin(frequency * alpha.get_value() + np.pi/2) * initial_positions[i][0]),
                                 0
                             ],
-                            color=BLACK
+                            color=dot_color
                         )
                     for i in range(num_dots)
                 ])
         )
-        self.add(dots, Dot(ORIGIN, color=BLACK))
+        self.add(dots, Dot(ORIGIN, color=dot_color))
         self.play(alpha.animate.set_value(duration), rate_func=linear, run_time=duration)

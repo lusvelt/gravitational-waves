@@ -10,14 +10,35 @@
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{tikz}
 \usepackage{xcolor}
+\usepackage{media9}
 \usepackage[
 backend=bibtex,
 style=alphabetic,
 sorting=ynt
 ]{biblatex}
 
+\usepackage{listings}
+
 \addbibresource{bibliography.bib}
+
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily,
+  keywordstyle=\color{blue},
+  commentstyle=\color{green!40!black},
+  stringstyle=\color{red},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=true,
+  captionpos=b,
+  showstringspaces=false,
+  escapeinside={(*@}{@*)}
+}
 
 
 
@@ -40,7 +61,7 @@ sorting=ynt
 }
 
 
-\title{Gravitational waves\\\linespread{1.5}
+\title{Gravitational wave solutions of the linearized field equations\\\linespread{1.5}
 \small Master in Theoretical Physics\\
 General Relativity 1\\
 Alma Mater Studiorum - Bologna University}
@@ -54,10 +75,9 @@ Alma Mater Studiorum - Bologna University}
 \section{Introduction}
 Gravitational radiation was theorized by Einstein himself in 1916 as a consequence of his General theory of Relativity. In his paper ``Approximative Integration of the Field Equations of Gravitation'', he derived the linearized equations for gravitational waves in a weak-field approximation, demonstrating that disturbances in the gravitational field propagate through spacetime in the form of waves, similar to how electromagnetic waves propagate through the electromagnetic field. It took several decades for experimental evidence of gravitational waves to be obtained. The first indirect evidence came in the 1970s through the measurement of the energy lost by a binary pulsar system, PSR B1913+16, due to emission of gravitational radiation, consistently with the predictions of General Relativity. Direct detection of gravitational waves was finally achieved in 2015 by the Laser Interferometer Gravitational-Wave Observatory (LIGO) collaboration. This phenomenon could turn out to be crucial for understanding the early universe, providing information that the current freely propagating photons do not convey due to their strong coupling with matter in the hot phase of the universe.
 
-In this dissertation, we are going to retrace the steps that make the gravitational radiation emerge from General Relativity, and gain some physical insight of how objects behave when a gravitational wave passes through them.
+In this dissertation, we are going to retrace the steps that make the gravitational radiation emerge from General Relativity, and gain some physical insight of how objects behave when a gravitational wave passes through them. Most of the material presented here is taken from \cite{carrol} and \cite{cas}, and the code for the animations that are in the attachments is published at \cite{lusvelt}.
 
-Gravitational waves are defined in the weak-field regime, where the metric tensor can be written as
-
+Gravitational waves are defined in the weak-field regime, in which case the metric tensor can be written as
 \begin{equation}
   g_{\mu\nu} = \eta_{\mu\nu} + \varepsilon h_{\mu\nu},
   \label{eq:metric-weak}
@@ -143,7 +163,7 @@ To check the action of the Lie derivative on tensor components, it is convenient
 $$\pounds_{\bar{\xi}}T^{\alpha_1\ldots \alpha_k}_{\beta_1\ldots\beta_l} = \partial_1 T^{\alpha_1\ldots \alpha_k}_{\beta_1\ldots\beta_l}.$$
 In particular, for a vector field $\bar{U}$, we have $\pounds_{\bar{\xi}}U^{\mu} = \partial_1 U^{\mu}$.
 However, it is also true that
-$$[\bar{\xi},\bar{U}]^{\mu} = \xi^{\nu}\partial_{\nu}U^{\mu} - U^{\nu}\partial_{\nu}\xi^{\mu} = \partial_1 U^{\mu}$$
+$$\left[\bar{\xi},\bar{U}\right]^{\mu} = \xi^{\nu}\partial_{\nu}U^{\mu} - U^{\nu}\partial_{\nu}\xi^{\mu} = \partial_1 U^{\mu}$$
 since in this coordinate system $\xi^{\mu} = (1,0,\ldots,0)$, so its partial derivatives vanish and the only term that survives is the one in the result. Since the commutator is coordinate independent, we have just shown that the Lie derivative of a vector field along $\bar{\xi}$ is equal to the commutator between the latter and the former.
 
 By using the Leibniz rule and the properties listed so far (in addition to the consideration that the Lie derivative of a scalar equals its covariant derivative, and that the covariant derivative of the metric vanishes for the Levi-Civita connection), one can show that the Lie derivative of the metric tensor can be expressed in terms of covariant derivatives as follows:
@@ -251,27 +271,335 @@ R_{ij} &= -\partial_i\partial_j(\Phi - \Psi) - \partial_0 \partial_{(i}w_{j)} + 
 \end{subequations}
 where the parentheses over indices stand for symmetrization i.e. $A_{(ij)} = \frac{1}{2}(A_{ij} + A_{ji})$.
 Finally, we can compute the Einstein tensor:
-\begin{subequations}
+\begin{subequations}\label{eq:g}
   \begin{align}
-    G_{00} &= 2\nabla^2 \Psi + \partial_k \partial_l s^{kl}\\
-    G_{0j} &= -\frac{1}{2}\nabla^2 w_j + \frac{1}{2}\partial_j\partial_k w^k + 2\partial_0\partial_j \Psi + \partial_0 \partial_k s_j^k\\
+    G_{00} &= 2\nabla^2 \Psi + \partial_k \partial_l s^{kl} \label{eq:g00}\\
+    G_{0j} &= -\frac{1}{2}\nabla^2 w_j + \frac{1}{2}\partial_j\partial_k w^k + 2\partial_0\partial_j \Psi + \partial_0 \partial_k s_j^k \label{eq:g0j}\\
     G_{ij} &= (\delta_{ij}\partial^2 - \partial_i\partial_j)(\Phi - \Psi) + \delta_{ij}\partial_0 \partial_k w^k - \partial_0 \partial_{(i}w_{j)} +\nonumber\\
-    &\ \ \ \ + 2\delta_{ij}\partial_0\partial_0\Psi - \square s_{ij} + 2\partial_k \partial_{(i}s_{j)}^k - \delta_{ij} \partial_{k}\partial_l s^{kl}
+    &\ \ \ \ + 2\delta_{ij}\partial_0\partial_0\Psi - \square s_{ij} + 2\partial_k \partial_{(i}s_{j)}^k - \delta_{ij} \partial_{k}\partial_l s^{kl} \label{eq:gij}
   \end{align}
 \end{subequations}
+We can now write Einstein's equations. Let's start with $G_{00} = 8\pi G T_{00}$ using \eqref{eq:g00}:
+\begin{equation}
+  \nabla^2 \Psi = 4\pi G T_{00} - \frac{1}{2}\partial_k \partial_l s^{kl},
+  \label{eq:einstein00}
+\end{equation}
+which is a differential equation for $\Psi$ with no time derivatives. Therefore, $\Psi$ can be fully determined once $T_{00}$ and $s_{ij}$ are specified along with boundary conditions at spacial infinity, and $\Psi$ turns out not to be an independent degree of freedom. The equation $G_{0j} = 8 \pi G T_{0j}$ turns out to be (from \eqref{eq:g0j}):
+\begin{equation}
+  (\delta_{jk}\nabla^2 - \partial_j\partial_k)w^k = -16 \pi G T_{0j} + 4\partial_0\partial_j \Psi + 2 \partial_0\partial_k s_j^k,
+  \label{eq:einstein0j}
+\end{equation}
+which reveals that $w^k$ is not an independent degree of freedom, since it can be determined once $T_{0j}$ and $s_{ij}$ are specified along with boundary conditions at spacial infinity, being there no time derivatives. Finally, the equation $G_{ij} = 8 \pi G T_{ij}$ from \eqref{eq:gij} is:
+\begin{align}
+  (\delta_{ij}\nabla^2 - \partial_i \partial_j)\Phi &= 8 \pi G T_{ij} + (\delta_{ij}\nabla^2 - \partial_i\partial_j - 2\delta_{ij\partial_0\partial_0})\Psi+\nonumber\\
+  &\ \ \ \ -\delta_{ij}\partial_0\partial_k w^k + \partial_0 \partial_{(i}w_{j)} + \square s_{ij} - 2\partial_k\partial_{(i}s_{j)}^k-\delta_{ij}\partial_k\partial_ls^{jl},
+  \label{eq:einsteinij}
+\end{align}
+where we see again that $\Phi$ can be fully determined by $T_{\mu\nu}$ and $s_{ij}$ (which in turn determine $\Psi$ and $w^k$, which appear in the equation).
+What we have just realized is that the only independent component in the perturbation $h_{\mu\nu}$ is the strain $s_{ij}$, and the other components depend on it along with the energy-momentum tensor.
 
-\section{Gauge fixing choices}
+In addition to the algebraic decomposition that we have just performed, we can further decompose the quantities $w^k$ and $s_{ij}$ by considering that they are fields, so we can take derivatives.
+The vector $w^k$ can be decomposed into a transverse part $w^k_{\bot}$ and a longitudinal part $w^k_{\parallel}$, where the transverse part has zero divergence and the longitudinal part has zero curl:
+\begin{equation}
+  w^k = w^k_{\bot} + w^k_{\parallel}\ \ \ \ \ s.t.\ \ \ \ \ \partial_i w^i_{\bot} = 0,\ \ \ \ \ \epsilon_{ijk}\partial^j w^k_{\parallel} = 0
+\end{equation}
 
+In this way, we can write the transversal part as the curl of a vector field $\xi^k$ and the longitudinal part as the gradient of a scalar $\lambda$:
+\begin{equation}
+  w^i_{\bot} = e^{ijk}\partial_j \xi_k,\ \ \ \ \ w_{\parallel}^i = \partial^i \lambda.
+\end{equation}
+Notice that $\lambda$ constitutes a single degree of freedom, while $\xi^k$ has only two degrees of freedom, because it non-uniquely identifies $w^k_{\bot}$, since a transformation $\xi^i \rightarrow \xi^i + \partial^i \chi$ would lead to the same $w^k_{\bot}$, so we need to make a gauge-fixing which kills one degree of freedom. They add up to three, as the degrees of freedom of a space vector should be.
+
+We can perform a similar decomposition on the strain $s_{ij}$, which can be decomposed into a transverse part $s^{ij}_{\bot}$, a solenoidal part $s_S^{ij}$ (which vanishes upon contraction with $\partial_i\partial_j$) and a longitudinal part $s_{\parallel}^{ij}$.
+\begin{equation}
+  s^{ij} = s^{ij}_{\bot} + s_S^{ij} + s^{ij}_{\parallel}\ \ \ \ \ s.t.\ \ \ \ \ \partial_i s^{ij}_{\bot} = 0,\ \ \ \ \ \partial_i \partial_j s^{ij}_S = 0,\ \ \ \ \ \epsilon_{ijk}\partial^j\partial_l s^{kl}_{\parallel} = 0.
+\end{equation}
+Therefore, the longitudinal part can be written in terms of derivatives of a scalar field $\theta$, while the solenoidal part in terms of derivatives of a transversal vector $\zeta^k$, and the transversal part cannot be further decomposed:
+\begin{equation}
+  s_{\parallel}^{ij} =\left(\partial^i\partial^j - \frac{1}{3}\delta^{ij}\nabla^2\right)\theta,\ \ \ \ \ s_{S}^{ij} = \partial^{(i}\zeta^{j)}\ \ \ \ \ with\ \ \ \ \ \partial_i \zeta^i = 0.
+\end{equation}
+Here we see that the longitudinal part contains one degree of freedom encoded by $\theta$, the solenoidal part contains two degrees of freedom encoded by $\zeta^i$ (with the constraint of vanishing divergence), and the other two are encoded in the transverse part. They correctly add up to 5, since $s_{ij}$ is 3 by 3 traceless and symmetric.
+
+We have therefore decomposed the metric perturbation $h_{\mu\nu}$ and encoded the degrees of freedom (10 in total) in 4 scalars $(\Phi, \Psi, \lambda, \theta)$ with one degree of freedom each, 2 transverse vectors $(\xi^i, \zeta^i)$ with two degrees of freedom each, and a transverse symmetric traceless 3 by 3 tensor $s^{ij}_{\bot}$ with two degrees of freedom.
+
+
+\section{Gauge fixing choices}\label{sec:gauge-fixing}
+We can now ask how the different components of the metric perturbation change after the gauge transformation \eqref{eq:gauge-metric}. If we write the gauge transformation as $h_{\mu\nu} = h_{\mu\nu}^{(\epsilon)} - \epsilon(\partial_{\mu}\xi_{\nu} + \partial_{\nu}\xi_{\mu})$ and substitute in \eqref{eq:h-decomposition}, we end up with the following transformations (we set $\epsilon = 1$ and require $\xi^i$ small):
+\begin{subequations}\label{eq:transformations}
+  \begin{align}
+    \Phi &\rightarrow \Phi + \partial_0 \xi^0\\
+    w_i &\rightarrow w_i + \partial_0 \xi_i + \partial_i \xi_0\\
+    \Psi &\rightarrow \Psi - \frac{1}{3}\partial_i \xi^i\\
+    s_{ij} &\rightarrow s_{ij} + \frac{1}{2}(\partial_i \xi_j + \partial_j \xi_i) - \frac{1}{3}\partial_k \xi^k\delta_{ij}.
+  \end{align}
+\end{subequations}
+Since we have the freedom to fix a particular gauge choice by imposing some conditions on $h_{\mu\nu}$, just like in electromagnetism, we now consider some gauge choices that are useful for the analysis of gravitational radiation.
+
+\paragraph{Harmonic or de Donder gauge\\}
+Since the Einstein tensor satisifies 4 Bianchi identities, we deduce that the 10 components of $h_{\mu\nu}$ are not independent, but there must be only 6 independent degrees of freedom. Therefore we can impose four constraints on $h_{\mu\nu}$ to perform the gauge fixing choice. The de Donder gauge condition reads:
+\begin{equation}
+  \partial^{\mu}h_{\mu\nu} - \frac{1}{2}\partial_{\nu}h = 0.
+  \label{eq:dedonder}
+\end{equation}
+If we have an arbitrary $h_{\mu\nu}$ and we impose the above condition on $h^{(\epsilon)}_{\mu\nu}$, by substituting \eqref{eq:gauge-metric} we end up with a differential equation for $\xi^{\mu}$:
+$$2 \square \xi_{\mu} = 2 \partial^{\alpha}h_{\alpha \mu} - \partial_{\mu}h,$$
+which can be solved for $\xi^{\mu}$ after setting boundary conditions.
+
+If we define the trace-reversed perturbation $\bar{h}_{\mu\nu} = h_{\mu\nu} - \frac{1}{2}h \eta_{\mu\nu}$, we can cast the gauge fixing condition \eqref{eq:dedonder} into a transversality condition:
+$$\partial_{\mu}\bar{h}^{\mu\nu} = 0.$$
+More importantly, the linearized Einstein tensor \eqref{eq:einstein-tensor} simplifies drastically, yielding the following field equations:
+$$\square\bar{h}_{\mu\nu} = -16 \pi G T_{\mu\nu},$$
+which looks exactly like a wave equation, and it is indeed the equation of motion of the propagating metric perturbation $h_{\mu\nu}$.
+
+\paragraph{Transverse gauge\\}
+Just like the Lorenz gauge does not fix a single gauge choice for the electromagnetic four-vector in vacuum, although it reduces the degrees of freedom to three, so the harmonic gauge we have just discussed still has some freedom left. In electromagnetism, to reduce the degrees of freedom to two (the polarization directions of electromagnetic radiation), we can impose the Coulomb gauge ($\vec{\nabla}\cdot\vec{A} = 0$), while in general relativity we can impose the transverse gauge, which is expressed in terms of the strain $s_{ij}$ and the vector $w^i$:
+
+\begin{equation}
+  \partial_i s^{ij} = 0,\ \ \ \ \ \ \ \ \ \ \partial_i w^i = 0.
+\end{equation}
+By \eqref{eq:transformations}, the above conditions are achievable as differential equations on $\xi^{\mu}$:
+$$\nabla^2 \xi^i + \frac{1}{3}\partial^i\partial^j \xi_j = -2 \partial_k s^{ki},\ \ \ \ \ \nabla^2 \xi^0 = \partial_i w^i + \partial_0\partial_i\xi^i,$$
+which can be solved for $\xi^{\mu}$ after imposing spacial boundary conditions.
+In this gauge, Einstein field equations become (from \eqref{eq:g}):
+\begin{subequations}
+  \begin{align}
+    G_{00} &= 2 \nabla^2 \Psi = 8 \pi G T_{00}\label{eq:g00-t}\\
+    G_{0j} &= -\frac{1}{2}\nabla^2 w_j + 2\partial_0\partial_j\Psi = 8\pi G T_{0j}\label{eq:g0j-t}\\
+    G_{ij} &= (\delta_{ij}\nabla^2 - \partial_i\partial_j)(\Phi - \Psi) - \partial_0\partial_{(i}w_{j)} + 2\delta_{ij} \partial_0 \partial_0 \Psi - \square s_{ij} = 8 \pi G T_{ij}\label{eq:gij-t}.
+  \end{align}
+\end{subequations}
+Now we have all the tools needed to study the wave solutions of linearized Einstein equations, in particular we will be interested in the solution in vacuum, since we want to study the propagation of gravitational radiation.
+
+\section{Geodesic deviation}
+Before finding the wave solutions for the perturbation $h_{\mu\nu}$, we want to introduce the notion of geodesic deviation, because it plays a crucial role in understanding the physical meaning of what the effects of gravitational radiation are on physical objects.
+
+Let us consider a one-parameter family of geodesics $\gamma_s(t)$ that do not intersect. The collection of all such geodesics define a two-dimensional submanifold whose coordinates are $\{s,t\}$, which individuate points in the manifold $x^{\mu}(s,t) \in \mathcal{M}$. Through this construction, we have two naturally defined vector fields: $\bar{T} = \partial/\partial t$, which is tangent to each geodesic, and $\bar{S} = \partial/\partial s$, which points from one geodesic to the neighboring ones.
+This latter vector field quantifies qualitatively the relative position between distinct geodesics in the family having the $s$ coordinate that differs by an infinitesimal amount $ds$. By studying the behaviour of $\bar{S}$, we can gain information about the physical curvature of spacetime, and nontheless is useful in understanding the physics of gravitational waves.
+
+
+We can now define the relative velocity between geodesics
+\begin{equation}
+  V^{\mu} = (\nabla_{\bar{T}}\bar{S})^{\mu} = T^{\alpha}\nabla_{\alpha}S^{\mu}
+  \label{eq:rel-geo-vel}
+\end{equation}
+and the relative acceleration between geodesics
+\begin{equation}
+  A^{\mu} = (\nabla_{\bar{T}}\bar{V})^{\mu} = T^{\alpha}\nabla_{\alpha}V^{\mu}.
+  \label{eq:rel-geo-acc}
+\end{equation}
+Notice that, since $\{s,t\}$ form a set of coordinates, the commutator between the relative vector fields vanishes, so $[\bar{S}, \bar{T}]^{\mu} = S^{\alpha}\nabla_{\alpha}T^{\mu} - T^{\alpha}\nabla_{\alpha}S^{\mu} = 0$, therefore we can write:
+\begin{equation}
+  S^{\alpha}\nabla_{\alpha}T^{\mu} = T^{\alpha}\nabla_{\alpha}S^{\mu}
+  \label{eq:vanishing-commutator}
+\end{equation}
+We can now compute $A^{\mu}$ explicitly, by substituting \eqref{eq:rel-geo-vel} into \eqref{eq:rel-geo-acc}:
+\begin{align*}
+  A^{\mu} &= T^{\alpha}\nabla_{\alpha}(T^{\beta}\nabla_{\beta}S^{\mu}) = T^{\alpha}\nabla_{\alpha}(S^{\beta}\nabla_{\beta}T^{\mu})\\
+  &=(T^{\alpha}\nabla_{\alpha}S^{\beta})(\nabla_{\beta}T^{\mu}) + T^{\alpha} S^{\beta}\nabla_{\alpha}\nabla_{\beta}T^{\mu}\\
+  &=(S^{\alpha}\nabla_{\alpha}T^{\beta})(\nabla_{\beta}T^{\mu}) + T^{\alpha}S^{\beta}(\nabla_{\beta}\nabla_{\alpha}T^{\mu} + {R^{\mu}}_{\nu\alpha\beta}T^{\nu})\\
+  &=(S^{\alpha}\nabla_{\alpha}T^{\beta})(\nabla_{\beta}T^{\mu}) + S^{\beta}\nabla_{\beta}(T^{\alpha}\nabla_{\alpha}T^{\mu}) - (S^{\beta}\nabla_{\beta}T^{\alpha})(\nabla_{\alpha}T^{\mu}) + {R^{\mu}}_{\nu\alpha\beta}T^{\nu}T^{\alpha}S^{\beta}\\
+  &= {R^{\mu}}_{\nu\rho\sigma} T^{\nu}T^{\rho}S^{\sigma},
+\end{align*}
+where we used the Leibniz rule, the geodesic equation $T^{\alpha}\nabla_{\alpha}T^{\mu} = 0$, and the definition of the torsion-less Riemann tensor ${R^{\mu}}_{\nu\alpha\beta}T^{\nu} = (\nabla_{\alpha}\nabla_{\beta}-\nabla_{\beta}\nabla_{\alpha})T^{\mu}$.
+We have thus derived an expression for the second derivative of the geodesic deviation:
+\begin{equation}
+  A^{\mu} = \nabla_{\bar{T}}\nabla_{\bar{T}} S^{\mu} = {R^{\mu}}_{\nu\rho\sigma} T^{\nu}T^{\rho}S^{\sigma}
+  \label{eq:geodesic-deviation}
+\end{equation}
 
 
 \section{Gravitational waves}
+We can finally turn to solve the linearized Einstein equations in vacuum, so we set $T_{\mu\nu} = 0$, and derive the form of $h_{\mu\nu}$.
+Let us put ourselves in the transverse gauge, which we have discussed at the end of section \ref{sec:gauge-fixing}, so that equation \eqref{eq:g00-t} with $T_{00}=0$ becomes $\nabla^2\Psi = 0$, which gives $\Psi = 0$ if we require that the metric perturbation and its spatial derivatives vanish at the boundary.
+Similarly, since $T_{0j}$ and $\Psi$ are both zero, then equation \eqref{eq:g0j-t} becomes $\nabla^2 w^j = 0$, which yields again $w^j=0$ with the aforementioned boundary conditions. With this, we can turn to equation \eqref{eq:gij-t}, of which we consider the trace, which is $\nabla^2\Phi = 0$, and therefore we have also $\Phi = 0$. Going to the traceless part of the same equation, we are just left with
+\begin{equation}
+  \square s_{ij} = 0.
+\end{equation}
+If we plug the quantities back into \eqref{eq:h-decomposition}, we obtain the following form for $h_{\mu\nu}$:
+\begin{equation}
+  h^{TT}_{\mu\nu} = \begin{pmatrix}
+    0 & \begin{matrix}0 & 0 & 0\end{matrix}\\
+    \begin{matrix}
+      0\\
+      0\\
+      0
+    \end{matrix}& 2s_{ij}
+  \end{pmatrix},
+\end{equation}
+where we added a superscript that stands for ``transverse traceless'', since we are working in the transverse gauge $\partial_{\mu}h^{\mu\nu} = 0$ and the trace is zero $\eta^{\mu\nu}h_{\mu\nu} = 0$. Notice that $h^{TT}_{0\nu} = 0$ i.e. the perturbation is purely spatial.
+The equation of motion is just
+\begin{equation}
+  \square h^{TT}_{\mu\nu} = 0,
+  \label{eq:wave-eq}
+\end{equation} 
+where the d'Alembertian operator is $\partial_{\mu}\partial^{\mu}$, since the background spacetime is flat.
+We can search for solutions of the form
+\begin{equation}
+  h^{TT}_{\mu\nu} = C_{\mu\nu}e^{ik_{\alpha}x^{\alpha}},
+  \label{eq:ansatz}
+\end{equation}
+where $C_{\mu\nu}$ is a constant symmetric traceless tensor that is purely spatial (i.e. $\eta^{\mu\nu}C_{\mu\nu} = 0$ and $C_{0\nu} = 0$), and $e^{ik_{\alpha}x^{\alpha}}$ is a complex phase which we use to simplify calculations, remembering to take the real part at the end.
 
+We can now plug our ansatz \eqref{eq:ansatz} into the wave equation \eqref{eq:wave-eq}. We get
+$$\square h^{TT}_{\mu\nu} = \eta^{\mu\nu}\partial_{\mu}\partial_{\nu}(C_{\mu\nu}e^{ik_{\alpha}x^{\alpha}}) = -\eta^{\mu\nu}k_{\mu}k_{\nu}e^{ik_{\alpha}x^{\alpha}} = -k_{\alpha}k^{\alpha}e^{ik_{\alpha}x^{\alpha}} = 0,$$
+which yields
+\begin{equation}
+  k_{\alpha}k^{\alpha} = 0,
+  \label{eq:null-wave-vector}
+\end{equation}
+that tells us that the gravitational wave vector is null, thus gravitational plane waves propagate at the speed of light.
 
+We are now left with the task to impose the transversality condition $\partial^{\mu}h^{TT}_{\mu\nu} = 0$, that is our gauge fixing condition. By an explicit calculation we have
+$$\partial^{\mu}h^{TT}_{\mu\nu} = \partial^{\mu}(C_{\mu\nu}e^{ik_{\alpha}x^{\alpha}}) = iC_{\mu\nu}k^\mu e^{ik_{\alpha}x^{\alpha}} = 0,$$
+which yields the orthogonality between $C_{\mu\nu}$ and the wave vector $k^{\mu}$:
+\begin{equation}
+  k^{\mu}C_{\mu\nu} = 0.
+\end{equation}
 
-\section{Detection with interferometers}
+Let us choose a convenient coordinate system in which our wave vector looks like $k^{\mu} = (\omega,0,0,\omega)$. By the fact that $C_{0\nu} = 0$ and the orthogonality $k^{\mu}C_{\mu\nu} = 0$, we are left with the constraint $C_{3\nu} = 0$, which together with $C_{0\nu} = 0$, symmetry and tracelessness gives the following form for $C_{\mu\nu}$:
+\begin{equation}
+  C_{\mu\nu} = \begin{pmatrix}
+    0 & 0 & 0 & 0\\
+    0 & h_{+} & h_{\times} & 0\\
+    0 & h_{\times} & -h_{+} & 0\\
+    0 & 0 & 0 & 0
+  \end{pmatrix},
+  \label{eq:cmunu}
+\end{equation}
+where the notation will be clarified later.
 
+In order to understand the physical effect of gravitational waves, we need to consider quantities that are coordinate independent, such as the relative motion of distinct test particles that are located at infinitesimal distance. Such particles follow geodesic trajectories, and are affected by perturbation of the metric, so we can quantify the effect of a gravitational wave by looking at their geodesic deviation, given by the separation vector $S^{\mu}$ that we have introduced in the last section by solving equation \eqref{eq:geodesic-deviation} at first order in $h_{\mu\nu}$:
+\begin{equation}
+  \nabla_{\bar{U}}\nabla_{\bar{U}}S^{\mu} = {R^{\mu}}_{\nu\rho\sigma}U^{\nu}U^{\rho}S^{\sigma},
+  \label{eq:geo-dev-u}
+\end{equation}
+where $\bar{U}$ is the four-velocity of the test particle, which satisfies the geodesic equation.
 
-\nocite{carrol, wik, cas}
+To do that, we make the assumption that our particles move slowly, more precisely the four-velocity can be expressed as $U^{\mu} = (1, \vec{0}) + O(|h|)$, and we can neglect terms of first order because the Riemann tensor is already first order. Therefore we need to compute only $R_{\mu 0 0 \sigma}$, because the middle indices get contracted with $U^{\mu}$, whose only nonzero component is the zero-th. By \eqref{eq:riemann-tensor}, we have
+$$R_{\mu 0 0 \sigma} = \frac{1}{2}(\partial_0\partial_0 h^{TT}_{\mu\sigma} + \partial_{\sigma}\partial{\mu}h^{TT}_{00} - \partial_{\sigma}\partial_0h^{TT}_{\mu 0} - \partial_{\mu}\partial_0h^{TT}_{\sigma 0}) = \frac{1}{2}\partial_0\partial_0h^{TT}_{\mu\sigma},$$
+where in the last step we used the fact that $h^{TT}_{\mu 0} = 0$, i.e. the perturbation is purely spatial.
+
+Since particles are moving slowly and the background metric is flat, we have $\nabla_{\bar{U}} = U^{\mu}\nabla_{\mu} = \nabla_0 = \partial_0$, so the geodesic deviation equation \eqref{eq:geo-dev-u} becomes
+\begin{equation}
+  \frac{\partial^2}{\partial t^2}S_{\mu} = \frac{1}{2} S^{\nu}\frac{\partial^2}{\partial t^2}h^{TT}_{\mu\sigma}.
+\end{equation}
+which can be cast in matrix form using $h^{TT}_{\mu\nu} = C_{\mu\nu}e^{ik_{\alpha}x^{\alpha}}$:
+\begin{equation}
+  \frac{\partial^2}{\partial t^2}\begin{pmatrix}
+    S_0\\
+    S_1\\
+    S_2\\
+    S_3
+  \end{pmatrix} = \frac{1}{2} \begin{pmatrix}
+    0 & 0 & 0 & 0\\
+    0 & h_{+} & h_{\times} & 0\\
+    0 & h_{\times} & -h_{+} & 0\\
+    0 & 0 & 0 & 0
+  \end{pmatrix} \begin{pmatrix}
+    S^0\\
+    S^1\\
+    S^2\\
+    S^3
+  \end{pmatrix}\frac{\partial^2}{\partial t^2} e^{ik_{\alpha}x^{\alpha}}.
+  \label{eq:matrix-eq}
+\end{equation}
+Here we notice that only $S^1$ and $S^2$ play a role, and so we can restrict our imagination to two dimensions, where we have a test particle at rest at the origin (we can always find a transverse traceless coordinate system in vacuum in which this particle is at rest, at least at first order, since we still have gauge freedom left after imposing four constraints given by the transverse gauge and by being in vacuum) and other test particles surrounding the former at a fixed distance, as depicted in fig. \ref{fig:test-particles}. What we are interested in is the relative position of the other particles with respect to the origin, and this position is encoded in the deviation vector $\vec{S} = (S^1, S^2)$, of which we can now find the time evolution at first order by solving the above differential equation.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \draw[->] (-1.5,0) -- (1.5,0) node[right, below] {$S^1$};
+    \draw[->] (0,-1.5) -- (0,1.5) node[above, left] {$S^2$};
+
+    % Draw circle
+    \fill (0,0) circle (1.5pt) node[] {};
+    % Draw points
+    \foreach \angle/\label in {0/1, 45/2, 90/3, 135/4, 180/5, 225/6, 270/7, 315/8} {
+      \fill (\angle:1) circle (1.5pt) node[] {};
+    }
+    
+    % Draw arrow
+    \draw[->,>=stealth, line width=1.0pt] (0,0) -- node[midway, above] {$\vec{S}$} (45:1);
+  \end{tikzpicture}
+\caption{Test particles in two-dimensional space disposed around a circle, with relative position with respect to the test particle at the origin given by the deviation vector $\vec{S}$.}
+\label{fig:test-particles}
+
+\end{figure}
+
+Let us consider two cases: $h_{\times} = 0$ and $h_{+} = 0$.
+In the first case $h_{\times} = 0$, equation \eqref{eq:matrix-eq} becomes the pair of equations
+\begin{align}
+  \frac{\partial^2}{\partial t^2}\begin{pmatrix}
+    S^1\\
+    S^2
+  \end{pmatrix} = \frac{1}{2}h_{+}\begin{pmatrix}
+    S^1\\
+    -S^2
+  \end{pmatrix}\frac{\partial^2}{\partial t^2}e^{ik_{\alpha}x^{\alpha}},
+\end{align}
+which are solved at first order (it is easily checkable by direct substitution) by
+\begin{align}
+  \begin{pmatrix}
+    S^1\\
+    S^2
+  \end{pmatrix} = \begin{pmatrix}
+    S^1_0\\
+    S^2_0
+  \end{pmatrix}+\frac{1}{2}h_{+}\begin{pmatrix}
+    S^1_0\\
+    -S^2_0
+  \end{pmatrix}e^{ik_{\alpha}x^{\alpha}},
+\end{align}
+where $S^1_0$ and $S^2_0$ denote the position of the test particle with respect to the origin at $t=0$. An animation that simulates this behaviour can be found in the attachment ``PlusPolarization.mp4'', where one can clearly notice that the gravitational wave makes the system behave in a pattern that resembles a $+$ shape.
+
+    
+In the case $h_{+} = 0$, equation \eqref{eq:matrix-eq} becomes
+\begin{align}
+  \frac{\partial^2}{\partial t^2}\begin{pmatrix}
+    S^1\\
+    S^2
+  \end{pmatrix} = \frac{1}{2}h_{\times}\begin{pmatrix}
+    S^2\\
+    S^1
+  \end{pmatrix}\frac{\partial^2}{\partial t^2}e^{ik_{\alpha}x^{\alpha}},
+\end{align}
+and its solution is given by
+\begin{align}
+  \begin{pmatrix}
+    S^1\\
+    S^2
+  \end{pmatrix} = \begin{pmatrix}
+    S^1_0\\
+    S^2_0
+  \end{pmatrix}+\frac{1}{2}h_{\times}\begin{pmatrix}
+    S^2_0\\
+    S^1_0
+  \end{pmatrix}e^{ik_{\alpha}x^{\alpha}},
+\end{align}
+which can be visualized in the animation ``CrossPolarization.mp4'' in the attachments, where one clearly sees that the behaviour of the system under the transit of a gravitational wave resembles a $\times$ shape.
+
+Since the general solution is a linear combination of plane waves which differ also possibly by a phase factor, we can build right-handed and left-handed circularly polarized gravitational waves by combining the plus polarization with the cross polarization multiplied by an imaginary factor $i$, correponding to a phase of $\pi/2$, and check the behaviour of our test system. If we consider $h_{+} = h_{\times} = h$ for simplicity, we get circularly polarized waves that induce the following motion for $\vec{S}$:
+\begin{align}
+  \begin{pmatrix}
+    S^1\\
+    S^2
+  \end{pmatrix} = \begin{pmatrix}
+    S^1_0\\
+    S^2_0
+  \end{pmatrix}+\frac{1}{2\sqrt{2}}h\left[\begin{pmatrix}
+    S^1_0\\
+    -S^2_0
+  \end{pmatrix} \pm i \begin{pmatrix}
+    S_0^2\\
+    S_0^1
+  \end{pmatrix}\right]e^{ik_{\alpha}x^{\alpha}},
+\end{align}
+where we have the minus sign for right-handed polarization and the plus sign for the left-handed one.
+Animations that show the behaviour of circularly polarized waves can be viewed in the attachments ``CircularLeftPolarization.mp4'' and ``CircularRightPolarization.mp4''.
+
+We have therefore achieved our goal of deriving the expression of gravitational waves solution for the metric perturbation $h_{\mu\nu}$ after having tackled the issue of gauge invariance, and we have also studied the effects of different polarizations on a physical system composed of test particles using the concept of geodesic deviation.
+
+\nocite{carrol, cas, lus}
 \printbibliography
 
 \end{document}

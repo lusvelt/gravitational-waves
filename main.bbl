@@ -1,0 +1,87 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{ynt/global//global/global}
+  \entry{carrol}{book}{}
+    \name{author}{1}{}{%
+      {{hash=CS}{%
+         family={Carrol},
+         familyi={C\bibinitperiod},
+         given={Sean},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Cambridge University Press}%
+    }
+    \strng{namehash}{CS1}
+    \strng{fullhash}{CS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Car19}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \field{isbn}{978-1108488396}
+    \field{title}{Spacetime and geometry: an introduction to general relativity}
+    \field{year}{2019}
+  \endentry
+
+  \entry{cas}{book}{}
+    \name{author}{1}{}{%
+      {{hash=CR}{%
+         family={Casadio},
+         familyi={C\bibinitperiod},
+         given={Roberto},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CR1}
+    \strng{fullhash}{CR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Cas23}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \field{note}{Lecture notes}
+    \field{title}{General Relativity 1}
+    \field{year}{2023}
+  \endentry
+
+  \entry{lusvelt}{online}{}
+    \name{author}{1}{}{%
+      {{hash=SD}{%
+         family={Scevola},
+         familyi={S\bibinitperiod},
+         given={Damiano},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SD1}
+    \strng{fullhash}{SD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Sce}
+    \field{sortinit}{9}
+    \field{sortinithash}{9}
+    \field{title}{Gravitational wave animation}
+    \verb{url}
+    \verb https://github.com/lusvelt/gravitational-waves/blob/main/animation.py
+    \endverb
+  \endentry
+\enddatalist
+\endinput
